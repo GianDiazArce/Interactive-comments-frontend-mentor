@@ -6,7 +6,7 @@ export const HomePage = () => {
         <main className=" bg-very-light-gray px-4 py-8">
             <div className="md:container md:mx-auto md:max-w-2xl">
                 <CommentsComponent />
-                <NewComment />
+                <NewComment isEdit={false} />
             </div>
         </main>
     );

@@ -1,12 +1,13 @@
 import { Comment } from "../../interfaces/CommentInterface";
 import { AvatarComponent } from "../avatar/AvatarComponent";
 import { ReplyButton } from "../buttons/ReplyButton";
-import { ActionsButtons } from '../buttons/ActionsButtons';
+import { ActionsButtons } from "../buttons/ActionsButtons";
 
 interface Props {
     currentUser: boolean;
     comment: Comment;
     setisReplyActive: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsEditActive: React.Dispatch<React.SetStateAction<boolean>>
     isReplyActive: boolean;
 }
 
@@ -14,6 +15,7 @@ export const CardHeaderComponent = ({
     currentUser,
     comment,
     isReplyActive,
+    setIsEditActive,
     setisReplyActive,
 }: Props) => {
     return (
@@ -31,13 +33,13 @@ export const CardHeaderComponent = ({
                         you
                     </span>
                 )}
-    
+
                 <span className="text-black/70">{comment.createdAt}</span>
             </div>
 
             <div className="hidden md:flex">
                 {currentUser ? (
-                    <ActionsButtons />
+                    <ActionsButtons comment={comment} setIsEditActive={setIsEditActive} />
                 ) : (
                     <ReplyButton
                         setisReplyActive={setisReplyActive}

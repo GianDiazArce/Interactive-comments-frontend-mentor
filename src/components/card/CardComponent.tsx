@@ -17,6 +17,7 @@ interface Props extends ComponentPropsWithoutRef<"div"> {
 export const CardComponent = ({ reply = false, comment }: Props) => {
     const { checkCurrentUser } = useContext(CommentContext);
     const [isReplyActive, setisReplyActive] = useState(false);
+    const [isEditActive, setIsEditActive] = useState(false);
 
     return (
         <div className="flex bg-white p-4 rounded-md md:flex-row md:justify-start gap-5">
@@ -29,6 +30,7 @@ export const CardComponent = ({ reply = false, comment }: Props) => {
                     comment={comment}
                     setisReplyActive={setisReplyActive}
                     isReplyActive={isReplyActive}
+                    setIsEditActive={setIsEditActive}
                 />
                 <CardBodyComponent
                     commentReplyTo={comment.replyingTo}
@@ -38,8 +40,10 @@ export const CardComponent = ({ reply = false, comment }: Props) => {
                 <CardFooterComponent
                     score={comment.score}
                     currentUser={checkCurrentUser(comment.user)}
+                    comment={comment}
                     setisReplyActive={setisReplyActive}
                     isReplyActive={isReplyActive}
+                    setIsEditActive={setIsEditActive}
                 />
                 {isReplyActive && (
                     <NewComment
@@ -47,8 +51,14 @@ export const CardComponent = ({ reply = false, comment }: Props) => {
                         reply
                         comment={comment}
                         setisReplyActive={setisReplyActive}
+                        isEdit={false}
                     />
                 )}
+                {
+                    isEditActive && (
+                        <NewComment isEdit setisReplyActive={setIsEditActive} buttonText='edit' comment={comment}/>
+                    )
+                }
             </div>
         </div>
     );

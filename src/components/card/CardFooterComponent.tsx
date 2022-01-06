@@ -2,19 +2,24 @@ import { ComponentPropsWithoutRef } from "react";
 import { InputNumberWithActions } from "../input-number/InputNumberWithActions";
 import { ActionsButtons } from "../buttons/ActionsButtons";
 import { ReplyButton } from "../buttons/ReplyButton";
+import { Comment } from "../../interfaces/CommentInterface";
 
 interface Props extends ComponentPropsWithoutRef<"footer"> {
     score: number;
     currentUser: boolean;
     setisReplyActive: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsEditActive: React.Dispatch<React.SetStateAction<boolean>>
     isReplyActive: boolean;
+    comment: Comment;
 }
 
 export const CardFooterComponent = ({
     score,
     currentUser,
     setisReplyActive,
+    setIsEditActive,
     isReplyActive,
+    comment,
     ...rest
 }: Props) => {
     return (
@@ -26,7 +31,7 @@ export const CardFooterComponent = ({
 
             <div>
                 {currentUser ? (
-                    <ActionsButtons />
+                    <ActionsButtons comment={comment} setIsEditActive={setIsEditActive}  />
                 ) : (
                     <ReplyButton
                         setisReplyActive={setisReplyActive}

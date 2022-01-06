@@ -7,12 +7,12 @@ interface CommentContextProps {
     currentUser: User;
     commentsData: Comment[];
     newComment: (comment: Comment, reply: boolean) => void;
-    replyAReply: (comment: Comment, nameToReply: string) => void;
+    replyAReply: (comment: Comment, replyPostId: number | string) => void;
+    editComment: (comment: Comment) => void;
+    deleteComment: (comment: Comment) => void;
 }
 
 export const CommentContext = createContext({} as CommentContextProps);
-// TODO:
-// Sistema de likes cuando se da un like un estado pasa a false y se evalua el anterior para bloquear si incremento y se devuelve el estado en caso de volver al original
 
 export const CustomCommentProvider = ({ children }: any) => {
     const [commentsData, setcommentsData] = useState<Comment[]>(data.comments);
@@ -29,7 +29,9 @@ export const CustomCommentProvider = ({ children }: any) => {
             );
             let copyCommentsData = commentsData.slice();
             if (commentToReply) {
-                copyCommentsData[commentToReply.id - 1].replies?.push(comment);
+                copyCommentsData
+                    .find((comm) => comm.id === commentToReply?.id)
+                    ?.replies?.push(comment);
                 setcommentsData(copyCommentsData);
             }
         } else {
@@ -37,18 +39,68 @@ export const CustomCommentProvider = ({ children }: any) => {
         }
     };
 
-    const replyAReply = (comment: Comment, nameToReply: string) => {
+    const replyAReply = (comment: Comment, replyPostId: number | string) => {
         let copyCommentsData = commentsData.slice();
-        console.log({ comment, nameToReply });
-        let idToReply = getIdByName(nameToReply || "");
-        if (idToReply) {
-            copyCommentsData[idToReply - 1].replies?.push(comment);
-            setcommentsData(copyCommentsData);
+        copyCommentsData
+            .find((comm) => comm.id === replyPostId)
+            ?.replies?.push(comment);
+        setcommentsData(copyCommentsData);
+    };
+
+    const editComment = (comment: Comment) => {
+        let copyCommentsData = commentsData.slice();
+        if (comment.user.username === currentUser.username) {
+            if (comment.replyingTo) {
+                console.log("respuesta");
+                copyCommentsData.forEach((el, index) => {
+                    if (el.id === comment.replyPostId) {
+                        copyCommentsData[index].replies?.forEach(
+                            (el2, index2) => {
+                                if (
+                                    copyCommentsData[index]!.replies![index2]
+                                        .id === comment.id
+                                ) {
+                                    copyCommentsData[index]!.replies![
+                                        index2
+                                    ].content = comment.content;
+                                }
+                            }
+                        );
+                    }
+                });
+                setcommentsData(copyCommentsData);
+            } else {
+                console.log("Comentario solo");
+                copyCommentsData.forEach((el, index) => {
+                    if (el.id === comment.id) {
+                        copyCommentsData[index].content = comment.content;
+                    }
+                });
+                setcommentsData(copyCommentsData);
+            }
         }
     };
 
-    const getIdByName = (name: string) => {
-        return commentsData.find((comm) => comm.user.username === name)?.id;
+    const deleteComment = (comment: Comment) => {
+        let copyCommentsData = commentsData.slice();
+        if (comment.user.username === currentUser.username) {
+            if (comment.replyingTo) {
+                copyCommentsData.forEach((element, index) => {
+                    if (element.id === comment.replyPostId) {
+                        copyCommentsData[index].replies =
+                            element.replies?.filter(
+                                (comm) => comm.id !== comment.id
+                            );
+                    }
+                });
+                setcommentsData(copyCommentsData);
+            } else {
+                copyCommentsData = commentsData.filter(
+                    (comm) => comm.id !== comment.id
+                );
+                setcommentsData(copyCommentsData);
+            }
+        }
     };
 
     return (
@@ -59,6 +111,8 @@ export const CustomCommentProvider = ({ children }: any) => {
                 commentsData,
                 currentUser,
                 replyAReply,
+                deleteComment,
+                editComment,
             }}
         >
             {children}

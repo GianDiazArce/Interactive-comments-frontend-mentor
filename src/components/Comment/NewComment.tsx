@@ -2,12 +2,13 @@ import { ComponentPropsWithoutRef, useContext, useState } from "react";
 import { AvatarComponent } from "../avatar/AvatarComponent";
 import { Comment } from "../../interfaces/CommentInterface";
 import { CommentContext } from "../context/CommentContext";
-import uuid from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 interface Props extends ComponentPropsWithoutRef<"div"> {
     buttonText?: string;
     reply?: boolean;
     comment?: Comment;
+    isEdit: boolean;
     setisReplyActive?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -16,21 +17,25 @@ export const NewComment = ({
     reply = false,
     comment,
     setisReplyActive,
+    isEdit,
     ...rest
 }: Props) => {
-    const { currentUser, newComment, replyAReply } = useContext(CommentContext);
+    const { currentUser, newComment, replyAReply, editComment } =
+        useContext(CommentContext);
     const initialCommentState: Comment = {
-        id: uuid.v4(),
+        id: uuidv4(),
         user: currentUser,
         content: "",
         createdAt: "a minute ago",
         score: 0,
         replies: [],
         replyingTo: comment ? comment.user.username : "",
+        replyPostId: comment?.id || undefined,
     };
 
-    const [commentState, setCommentState] =
-        useState<Comment>(initialCommentState);
+    const [commentState, setCommentState] = useState<Comment>(
+        isEdit === true && comment ? comment : initialCommentState
+    );
 
     const commentContentChange = (
         e: React.ChangeEvent<HTMLTextAreaElement>
@@ -42,22 +47,29 @@ export const NewComment = ({
     };
 
     const commentButton = () => {
-        if (!reply) {
-            newComment(commentState, false);
-            setCommentState(initialCommentState);
+        if (isEdit === true) {
+            editComment(commentState)
+            setisReplyActive && setisReplyActive(false)
         } else {
-            if (comment?.replyingTo) {
-                replyAReply(
-                    {
-                        ...commentState,
-                        replyingTo: comment.user.username,
-                    },
-                    comment.replyingTo
-                );
-            } else {
-                newComment(commentState, true);
+            if (!reply) {
+                newComment(commentState, false);
                 setCommentState(initialCommentState);
-                setisReplyActive && setisReplyActive(false);
+            } else {
+                if (comment?.replyingTo) {
+                    replyAReply(
+                        {
+                            ...commentState,
+                            replyingTo: comment.user.username,
+                            replyPostId: comment.replyPostId,
+                            id: uuidv4(),
+                        },
+                        comment.replyPostId || 0
+                    );
+                } else {
+                    newComment(commentState, true);
+                    setCommentState(initialCommentState);
+                    setisReplyActive && setisReplyActive(false);
+                }
             }
         }
     };
@@ -69,7 +81,7 @@ export const NewComment = ({
             <textarea
                 className="border-2 border-dotted border-primary/20 resize-none rounded w-full px-3 py-2"
                 name="newComment"
-                placeholder="Add a comment..."
+                placeholder={isEdit ? "Edit a Comment" : "Add a comment..."}
                 onChange={commentContentChange}
                 value={commentState.content}
             ></textarea>
