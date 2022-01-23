@@ -29,20 +29,13 @@ export const CardComponent = ({ reply = false, comment }: Props) => {
                     currentUser={checkCurrentUser(comment.user)}
                     comment={comment}
                     setisReplyActive={setisReplyActive}
-                    isReplyActive={isReplyActive}
                     setIsEditActive={setIsEditActive}
                 />
-                <CardBodyComponent
-                    commentReplyTo={comment.replyingTo}
-                    content={comment.content}
-                    reply={reply}
-                />
+                <CardBodyComponent comment={comment} reply={reply} />
                 <CardFooterComponent
-                    score={comment.score}
                     currentUser={checkCurrentUser(comment.user)}
                     comment={comment}
                     setisReplyActive={setisReplyActive}
-                    isReplyActive={isReplyActive}
                     setIsEditActive={setIsEditActive}
                 />
                 {isReplyActive && (
@@ -54,11 +47,14 @@ export const CardComponent = ({ reply = false, comment }: Props) => {
                         isEdit={false}
                     />
                 )}
-                {
-                    isEditActive && (
-                        <NewComment isEdit setisReplyActive={setIsEditActive} buttonText='edit' comment={comment}/>
-                    )
-                }
+                {isEditActive && (
+                    <NewComment
+                        isEdit
+                        setisReplyActive={setIsEditActive}
+                        buttonText="edit"
+                        comment={comment}
+                    />
+                )}
             </div>
         </div>
     );

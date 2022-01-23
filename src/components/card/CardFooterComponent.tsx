@@ -5,20 +5,16 @@ import { ReplyButton } from "../buttons/ReplyButton";
 import { Comment } from "../../interfaces/CommentInterface";
 
 interface Props extends ComponentPropsWithoutRef<"footer"> {
-    score: number;
     currentUser: boolean;
     setisReplyActive: React.Dispatch<React.SetStateAction<boolean>>;
-    setIsEditActive: React.Dispatch<React.SetStateAction<boolean>>
-    isReplyActive: boolean;
+    setIsEditActive: React.Dispatch<React.SetStateAction<boolean>>;
     comment: Comment;
 }
 
 export const CardFooterComponent = ({
-    score,
     currentUser,
     setisReplyActive,
     setIsEditActive,
-    isReplyActive,
     comment,
     ...rest
 }: Props) => {
@@ -27,16 +23,16 @@ export const CardFooterComponent = ({
             className="flex justify-between items-center md:hidden"
             {...rest}
         >
-            <InputNumberWithActions score={score} />
+            <InputNumberWithActions score={comment.score} />
 
             <div>
                 {currentUser ? (
-                    <ActionsButtons comment={comment} setIsEditActive={setIsEditActive}  />
-                ) : (
-                    <ReplyButton
-                        setisReplyActive={setisReplyActive}
-                        isReplyActive={isReplyActive}
+                    <ActionsButtons
+                        comment={comment}
+                        setIsEditActive={setIsEditActive}
                     />
+                ) : (
+                    <ReplyButton setisReplyActive={setisReplyActive} />
                 )}
             </div>
         </footer>

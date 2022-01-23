@@ -1,14 +1,13 @@
 import { ComponentPropsWithoutRef } from "react";
+import { Comment } from "../../interfaces/CommentInterface";
 
 interface Props extends ComponentPropsWithoutRef<"div"> {
-    commentReplyTo?: string;
-    content: string;
+    comment: Comment;
     reply?: Boolean;
 }
 
 export const CardBodyComponent = ({
-    commentReplyTo,
-    content,
+    comment,
     reply,
     ...rest
 }: Props) => {
@@ -17,10 +16,10 @@ export const CardBodyComponent = ({
             <p className="text-base text-black/70 font-normal ">
                 {reply && (
                     <span className="text-primary hover:opacity-50 font-medium cursor-pointer mr-1">
-                        @{commentReplyTo}
+                        @{comment.replyingTo}
                     </span>
                 )}
-                {content}
+                {comment.content}
             </p>
         </div>
     );

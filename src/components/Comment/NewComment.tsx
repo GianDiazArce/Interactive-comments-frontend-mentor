@@ -48,8 +48,8 @@ export const NewComment = ({
 
     const commentButton = () => {
         if (isEdit === true) {
-            editComment(commentState)
-            setisReplyActive && setisReplyActive(false)
+            editComment(commentState);
+            setisReplyActive && setisReplyActive(false);
         } else {
             if (!reply) {
                 newComment(commentState, false);

@@ -3,7 +3,7 @@ import { NewComment } from "../components/Comment/NewComment";
 
 export const HomePage = () => {
     return (
-        <main className=" bg-very-light-gray px-4 py-8">
+        <main className=" bg-very-light-gray px-4 py-8 min-h-screen">
             <div className="md:container md:mx-auto md:max-w-2xl">
                 <CommentsComponent />
                 <NewComment isEdit={false} />

@@ -7,14 +7,12 @@ interface Props {
     currentUser: boolean;
     comment: Comment;
     setisReplyActive: React.Dispatch<React.SetStateAction<boolean>>;
-    setIsEditActive: React.Dispatch<React.SetStateAction<boolean>>
-    isReplyActive: boolean;
+    setIsEditActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const CardHeaderComponent = ({
     currentUser,
     comment,
-    isReplyActive,
     setIsEditActive,
     setisReplyActive,
 }: Props) => {
@@ -39,12 +37,12 @@ export const CardHeaderComponent = ({
 
             <div className="hidden md:flex">
                 {currentUser ? (
-                    <ActionsButtons comment={comment} setIsEditActive={setIsEditActive} />
-                ) : (
-                    <ReplyButton
-                        setisReplyActive={setisReplyActive}
-                        isReplyActive={isReplyActive}
+                    <ActionsButtons
+                        comment={comment}
+                        setIsEditActive={setIsEditActive}
                     />
+                ) : (
+                    <ReplyButton setisReplyActive={setisReplyActive} />
                 )}
             </div>
         </header>
