@@ -51,7 +51,6 @@ export const CustomCommentProvider = ({ children }: any) => {
         let copyCommentsData = commentsData.slice();
         if (comment.user.username === currentUser.username) {
             if (comment.replyingTo) {
-                console.log("respuesta");
                 copyCommentsData.forEach((el, index) => {
                     if (el.id === comment.replyPostId) {
                         copyCommentsData[index].replies?.forEach(
@@ -70,7 +69,6 @@ export const CustomCommentProvider = ({ children }: any) => {
                 });
                 setcommentsData(copyCommentsData);
             } else {
-                console.log("Comentario solo");
                 copyCommentsData.forEach((el, index) => {
                     if (el.id === comment.id) {
                         copyCommentsData[index].content = comment.content;

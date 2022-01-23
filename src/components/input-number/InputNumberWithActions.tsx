@@ -32,6 +32,7 @@ export const InputNumberWithActions = ({ score, ...rest }: Props) => {
                 name="custom-input-number"
                 value={counter}
                 readOnly
+                aria-label="custom-input-number"
             />
             <button
                 className={`${
